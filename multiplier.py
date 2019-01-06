@@ -44,7 +44,8 @@ def find_number_pairs(abs_a, abs_b):
 
 def multiply_optimized(first_operand, second_operand):
     """
-    for any numbers and b, we first find min(a, b) and
+    for any numbers and b, we first find m:x
+    in(a, b) and
     run the command for those number of iterations
     @a: 32-bit integer
     @b: 32-bit integer
@@ -55,14 +56,22 @@ def multiply_optimized(first_operand, second_operand):
     if big_b < 0:
         big_b = 0 - big_b
     x, y = find_number_pairs(big_a, big_b)
-    i = 1
-    result = y
-    while i < x:
-        result = result << 1
-        i = i << 1
-    for _ in range((i - x)):
-        result = result  - y
-    answer = calculate_sign(first_operand, second_operand, result)
+    iterations = x
+    i = 0
+    delta = 0
+    while iterations is not 0:
+        j = 1
+        s = y
+        while j < iterations:
+            s = s << 1
+            j = j << 1
+        if i % 2 == 0:
+            delta = delta + s
+        else:
+            delta = delta - s
+        iterations = j - iterations
+        i = i + 1
+    answer = calculate_sign(first_operand, second_operand, y+delta)
     return answer
 
 
@@ -101,16 +110,16 @@ def pretty_print(first_operand, second_operand, value_optimized, value_unoptimiz
 if __name__ == "__main__":
     TIMES_OPTIMIZED = []
     TIMES_UNOPTIMIZED = []
-    for i in range(2):
-        FIRST_OPERAND = randint(-1e20, 1e20)
-        SECOND_OPERAND = randint(-1e20, 1e20)
+    for i in range(100):
+        FIRST_OPERAND = randint(-5e7, 5e7)
+        SECOND_OPERAND = randint(-5e7, 5e7)
         START_TIME = datetime.datetime.now()
         VALUE_UNOPTIMIZED = multiply_unoptimized(FIRST_OPERAND, SECOND_OPERAND)
-        TIMES_UNOPTIMIZED.append((datetime.datetime.now() - START_TIME).total_seconds())
+        TIMES_UNOPTIMIZED.append(float((datetime.datetime.now() - START_TIME).total_seconds()))
         START_TIME = datetime.datetime.now()
         VALUE_OPTIMIZED = multiply_optimized(FIRST_OPERAND, SECOND_OPERAND)
         TIMES_OPTIMIZED.append((datetime.datetime.now() - START_TIME).total_seconds())
-        pretty_print(FIRST_OPERAND, SECOND_OPERAND, VALUE_OPTIMIZED, VALUE_UNOPTIMIZED)
-    print("uoptimized version took: {} ms on average".format(1000 * np.mean(TIMES_UNOPTIMIZED)))
-    print("optimized version took: {} ms on average".\
-            format(1000 * np.mean(TIMES_OPTIMIZED)))
+        pretty_print(FIRST_OPERAND, SECOND_OPERAND, VALUE_OPTIMIZED, VALUE_OPTIMIZED)
+    print("uoptimized version took: {} ms on average".format((1000.0 * np.mean(TIMES_UNOPTIMIZED))))
+    print("optimized version took: %.50f ms on average" % \
+            ((1000.0 * float(np.mean(TIMES_OPTIMIZED)))))
