@@ -43,13 +43,6 @@ def find_number_pairs(abs_a: int, abs_b: int)->(int, int):
 
 
 def multiply_optimized(first_operand: int, second_operand: int)->(int, int):
-    """
-    for any numbers and b, we first find m:x
-    in(a, b) and
-    run the command for those number of iterations
-    @a: 32-bit integer
-    @b: 32-bit integer
-    """
     big_a, big_b = first_operand, second_operand
     if big_a < 0:
         big_a = 0 - big_a
@@ -71,8 +64,7 @@ def multiply_optimized(first_operand: int, second_operand: int)->(int, int):
             delta = delta - s
         iterations = j - iterations
         i = i + 1
-    answer = calculate_sign(first_operand, second_operand, y+delta)
-    return answer
+    return calculate_sign(first_operand, second_operand, y+delta)
 
 
 def multiply_unoptimized(first_operand: int, second_operand: int)->(int, int):
